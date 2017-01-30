@@ -45,7 +45,7 @@ while( my $result = $report->next_result ) {
 	# get gene info
 	$hit_desc =~ /[\w\d\s]+?gene_symbol:(\w+)/;
 	my $symbol = $1;
-	$hit_desc =~ /[\w\d\s]+?description:([\w\s]+)/;
+	$hit_desc =~ /[\w\d\s]+?description:([\w\s-\,]+)/;
 	my $description = $1;
 	
 	print "$gene\t$ensp\t$symbol\t$description\n";
