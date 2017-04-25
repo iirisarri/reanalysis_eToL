@@ -66,15 +66,20 @@ MAIN: while ( my $line =<IN> ) {
 		next MAIN;
 	}
 
+	# SAVE FIRST RECORDs INTO %hash
+	if ( !exists $hash{$query_name}{$hit_name}{'1'} ) {
+
+		$hash{$query_name}{$hit_name}{$hsp_num} = [$coord_hit_st, $coord_hit_end, $coord_query_st, $coord_query_end, $evalue, $bias];
+		next MAIN;
+	}
+
 	# MAKE HITS UNIQUE (BY HSP)
 	# append number to hit if it contains multiple hsp (high scoring pairs; 
 	#	ie, >1 homologous stretches for present a query_hit pair)
 	if ( exists $hash{$query_name}{$hit_name} ) {
 	
-		# get last hsp_num and add one
-		my @hits = sort keys ${ $hash{$query_name} }{$hit_name};
-		my $hsp_num_old = pop @hits;
-		my $hsp_num = $hsp_num_old +1;
+		my $hsp_num_old = scalar keys ${ $hash{$query_name} }{$hit_name};
+		$hsp_num = $hsp_num_old + 1;
 	}
 	
 	# SKIP OVERLAPPING (including single position overlaps)
@@ -136,17 +141,20 @@ MAIN: while ( my $line =<IN> ) {
 
 # <= CHECK HERE!!
 
-print "\nQUERY\tHIT_DOMAIN\tHIT_START\tHIT_END\tQUERY_SART\tQUERY_END\tE-VALUE\tBIAS\n";
+print "\nQUERY\tHIT_DOMAIN\tHSP_NUM\tHIT_START\tHIT_END\tQUERY_START\tQUERY_END\tE-VALUE\tBIAS\n";
+# keys are queries
 foreach my $m ( sort keys %hash ) {
 
+	# keys are hits
 	foreach my $n ( sort keys %{ $hash{$m} } ) {
 
+		# keys are hsps
 		foreach my $o ( sort keys %{ ${ $hash{$m} }{$n} } ) {
 
-			print "$m\t$n\t";
+			print "$m\t$n\t$o\t";
 			my @array = @{ ${ ${ $hash{$m} }{$n} }{$o} };
 			print join ("\t", @array ), "\n";
-			last;
+			next;
 		}
 	}
 }
