@@ -66,13 +66,6 @@ MAIN: while ( my $line =<IN> ) {
 		next MAIN;
 	}
 
-	# SAVE FIRST RECORDs INTO %hash
-	if ( !exists $hash{$query_name}{$hit_name}{'1'} ) {
-
-		$hash{$query_name}{$hit_name}{$hsp_num} = [$coord_hit_st, $coord_hit_end, $coord_query_st, $coord_query_end, $evalue, $bias];
-		next MAIN;
-	}
-
 	# MAKE HITS UNIQUE (BY HSP)
 	# append number to hit if it contains multiple hsp (high scoring pairs; 
 	#	ie, >1 homologous stretches for present a query_hit pair)
