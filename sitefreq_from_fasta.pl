@@ -46,8 +46,9 @@ for (my $i=0; $i<$aln_length; $i++) {
 	my $site = $i + 1;
 	%site_pattern = (); # initialize with new site
 	my $unambig_aa = 0;	# initialize with new site
+	my $freq_sum = 0;
 
-	# loop through the hash to count amino acids 
+	# loop through the hash to get site pattern (count amino acids)
 	foreach my $key ( sort keys %fasta_hash ) {
 
 		my $aa = ${ $fasta_hash{$key} }[$i];
@@ -73,21 +74,23 @@ for (my $i=0; $i<$aln_length; $i++) {
 		my $freq = $site_pattern{$e} / $unambig_aa;
 		
 		$site_pattern{$e} = $freq;
+		$freq_sum += $freq;
 	}
 
 	# print out frequencies in "iqtree" format: 1 A R N D C Q E G H I L K M F P S T W Y V
 	print "$site";
 	
-	foreach my $aa ( @order ) {
+	foreach my $AA ( @order ) {
 	
-		if ( exists $site_pattern{$aa} ) {
-			print " $site_pattern{$aa}";
+		if ( exists $site_pattern{$AA} ) {
+			print " $site_pattern{$AA}";
 		}
 		else {
 			print " 0";
 		}
 	}
-	print "\n";
+	# checking that freqs within each line add up to 1 
+	# print " SUM:$freq_sum\n";
 }
 
 print STDERR "\ndone!\n\n";
