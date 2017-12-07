@@ -23,6 +23,7 @@ use Bio::TreeIO;
 #
 # Known problems: alignments with identical sequences will generate constrained iqtree to
 #	abort & script will die. In such cases, repeat using the generated .uniqueseq.phy files
+# 	Solution: run rm_duplicated_seqs.pl
 #
 ##########################################################################################
 
