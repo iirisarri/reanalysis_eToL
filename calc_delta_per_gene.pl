@@ -155,6 +155,6 @@ foreach my $fasta (@infiles) {
 	my $delta_a2 = $lh_ha2 - $lh_h0;
 
 	# print out stuff
-	print OUT "$fasta\t$lh_h0\t$lh_ha1\t$lh_ha2\$delta_a1\t$delta_a2\n";
+	print OUT "$fasta\t$lh_h0\t$lh_ha1\t$lh_ha2\t$delta_a1\t$delta_a2\n";
 }
 	
