@@ -23,13 +23,14 @@ use Bio::TreeIO;
 #
 # Known problems: alignments with identical sequences will generate constrained iqtree to
 #	abort & script will die. In such cases, repeat using the generated .uniqueseq.phy files
-# 	Solution: run rm_duplicated_seqs.pl
 #
 ##########################################################################################
 
 my $usage = "perl calc_delta_per_gene.pl *sdtaxids.fas\n";
 my @infiles = @ARGV or die $usage; 
 my $outfile = "_delta_results.tab";
+
+my $outgroup = ""; # will root in any opisthokont or amebozoa to avoid interactions with lca of archaeplastida
 
 open (OUT, ">", $outfile);
 
@@ -62,7 +63,13 @@ foreach my $fasta (@infiles) {
 		}
 		else {
 	
-			push (@nonPPE, $seqio_obj->primary_id);
+		    push (@nonPPE, $seqio_obj->primary_id);
+
+		    # get root
+		    if ( $outgroup eq "" ) {
+			
+			$outgroup = $seqio_obj->primary_id if ( $seqio_obj->primary_id =~ /^Op_.+/ || $seqio_obj->primary_id =~ /^Am_.+/ );
+		    }
 		}
 	}
 
@@ -98,6 +105,10 @@ foreach my $fasta (@infiles) {
 	my @node_obj;
 
 	my $tree = $in->next_tree;
+
+	# root the tree
+	my $root = $tree->find_node( -id => $outgroup );
+	$tree->reroot( $root );
 
 	# get node objects from PPE
 	foreach my $i (@PPE) {
